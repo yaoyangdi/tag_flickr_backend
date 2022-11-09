@@ -1,6 +1,8 @@
 package com.example.tagflickr.controller;
 
 import com.example.tagflickr.common.ApiResponse;
+import com.example.tagflickr.dto.ImageResponseDto;
+import com.example.tagflickr.dto.TagResponseDto;
 import com.example.tagflickr.model.Image;
 import com.example.tagflickr.model.Tag;
 import com.example.tagflickr.service.tag.TagService;
@@ -23,7 +25,7 @@ public class TagController {
      * Get all tags
      */
     @GetMapping
-    public List<Tag> allTags(){
+    public List<TagResponseDto> allTags(){
         return tagService.getAll();
     }
 
@@ -31,7 +33,7 @@ public class TagController {
      * Get list of distinct images by tags
      */
     @GetMapping("/getImagesByTag")
-    public Set<Image> getImageByTagName(@RequestParam("name") String name){
+    public List<ImageResponseDto> getImageByTagName(@RequestParam("name") String name){
         return tagService.getImagesByTagName(name);
     }
 

@@ -11,5 +11,4 @@ public class TagflickrApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TagflickrApplication.class, args);
 	}
-
 }

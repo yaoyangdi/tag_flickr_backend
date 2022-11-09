@@ -1,5 +1,7 @@
 package com.example.tagflickr.service.tag;
 
+import com.example.tagflickr.dto.ImageResponseDto;
+import com.example.tagflickr.dto.TagResponseDto;
 import com.example.tagflickr.model.Image;
 import com.example.tagflickr.model.Tag;
 import com.example.tagflickr.repository.TagRepository;
@@ -34,21 +36,34 @@ public class TagServiceImpl implements TagService{
      * Get all tags
      */
     @Override
-    public List<Tag> getAll() {
-        return tagRepository.findAll();
+    public List<TagResponseDto> getAll() {
+        List<Tag> all = tagRepository.findAll();
+        List<TagResponseDto> tagResponseDtoList = new ArrayList<>();
+        /*  Convert Tag entity into Tag entity Dto  */
+        for(int i=0; i<all.size(); i++){
+            Tag tag = all.get(i);
+            TagResponseDto tagResponseDto = new TagResponseDto(tag.getName());
+            tagResponseDtoList.add(tagResponseDto);
+        }
+        return tagResponseDtoList;
     }
 
     /**
      * Get all selected images by the input tag name(s)
      */
     @Override
-    public Set<Image> getImagesByTagName(String name) {
-        Set<Image> images = new HashSet<>(); // use set for adding distinct images
-        if (name.contains(",")) {           // Split the input tag names in list format only if the input contains comma character
+    public List<ImageResponseDto> getImagesByTagName(String name) {
+        Set<Image> images = new HashSet<>(); // Use set for adding distinct images
+
+        if (name.contains(",")) {            // Split the input tag names in list format only if the input contains comma character
             List<String> tags = Arrays.asList(name.split(","));
+
+            /*  Search related images for each tag  */
             for(int i = 0; i<tags.size(); i++) {
                 Tag tag = tagRepository.findByName(tags.get(i));
-                if(Objects.nonNull((tag))){
+
+                /*  Check each tag's existence  */
+                if(Objects.nonNull((tag))){                             // nonNull(searchedTag) means tag exists
                     Object[] toArray = tag.getImages().toArray();
                     for(int j=0; j<toArray.length; j++){
                         images.add((Image) toArray[j]);
@@ -65,7 +80,26 @@ public class TagServiceImpl implements TagService{
             }
         }
 
-        return images;
+        /*  Convert each Image entity into Image entity Dto  */
+        List<ImageResponseDto> imageResponseDtoList = new ArrayList<>();
+        Object[] imagesList = images.toArray();
+
+        for(int j=0; j<imagesList.length; j++) {
+            /*  Initialization of entity and entity Dto  */
+            Image image = (Image) imagesList[j];
+            ImageResponseDto imageResponseDto = new ImageResponseDto(image.getTitle(), new ArrayList<>(), image.getUrl());
+
+            /*  format Tag entity into String  */
+            List<Tag> tagList = image.getTags();
+            for (int k = 0; k < tagList.size(); k++) {
+                Tag tag = tagList.get(k);
+                imageResponseDto.getTags().add(tag.getName());
+            }
+
+            imageResponseDtoList.add(imageResponseDto);
+        }
+
+        return imageResponseDtoList;
     }
 
     /**

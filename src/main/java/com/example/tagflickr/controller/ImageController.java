@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.example.tagflickr.common.ApiResponse;
 import com.example.tagflickr.common.CloudinarySingleton;
 import com.example.tagflickr.dto.ImageDto;
+import com.example.tagflickr.dto.ImageResponseDto;
 import com.example.tagflickr.model.Image;
 import com.example.tagflickr.model.Tag;
 import com.example.tagflickr.repository.ImageRepository;
@@ -40,7 +41,7 @@ public class ImageController {
      * Get all images
      */
     @GetMapping
-    public List<Image> allImages(){
+    public List<ImageResponseDto> allImages(){
         return imageService.getAll();
     }
 
@@ -59,7 +60,9 @@ public class ImageController {
                 if(imageDto.getTags().contains(",")){
                     ArrayList<String> tagsArr = new ArrayList<String>(Arrays.asList(imageDto.getTags().split(",")));
                     for(int i =0; i<tagsArr.size(); i++) {
-                        tagService.addTag(tagsArr.get(i), image);
+                        if(tagsArr.get(i) != "") {  // Avoid empty string
+                            tagService.addTag(tagsArr.get(i), image);
+                        }
                     }
                 } else{
                     tagService.addTag(imageDto.getTags(), image);

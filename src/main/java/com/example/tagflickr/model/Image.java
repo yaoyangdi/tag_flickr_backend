@@ -36,7 +36,6 @@ public class Image {
                     CascadeType.MERGE
             }, mappedBy = "images")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonBackReference
     private List<Tag> tags = new ArrayList<>();
 
 

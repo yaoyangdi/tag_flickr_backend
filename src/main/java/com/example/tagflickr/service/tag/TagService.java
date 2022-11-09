@@ -1,5 +1,7 @@
 package com.example.tagflickr.service.tag;
 
+import com.example.tagflickr.dto.ImageResponseDto;
+import com.example.tagflickr.dto.TagResponseDto;
 import com.example.tagflickr.model.Image;
 import com.example.tagflickr.model.Tag;
 
@@ -9,9 +11,9 @@ import java.util.Set;
 public interface TagService {
     void addTag(String name, Image image);
 
-    List<Tag> getAll();
+    List<TagResponseDto> getAll();
 
-    Set<Image> getImagesByTagName(String name);
+    List<ImageResponseDto> getImagesByTagName(String name);
 
     void deleteAllTags();
 }

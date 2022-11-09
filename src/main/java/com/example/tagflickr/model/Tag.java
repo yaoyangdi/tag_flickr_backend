@@ -35,7 +35,6 @@ public class Tag {
             joinColumns = { @JoinColumn(name = "image_id") },
             inverseJoinColumns = { @JoinColumn(name = "tag_id") })
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonManagedReference
     private Set<Image> images = new HashSet<>();
 
     /*  Constructor  */
